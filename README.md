@@ -2,5 +2,6 @@
 
 ## Technology used
 * React
+* Tailwind
 * Express
 * PostgreSQL
