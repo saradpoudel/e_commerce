@@ -2,13 +2,27 @@ import { Link } from "react-router-dom"
 import { useForm } from "react-hook-form"
 import Logo from "../components/Logo"
 import registerBg from "../assets/registerBg.jpg"
+import { yupResolver } from "@hookform/resolvers/yup"
+import RegisterSchema from "../valadationSchemas/RegisterSchema"
+import { useState } from "react"
+import SubmitAction from "../actions/SubmitAction.js"
+
 
 
 function Register() {
-    const { register, handleSubmit, watch, formState: { errors } } = useForm();
+    const [passwordVisible, setPasswordVisible] = useState(false);
 
-    function onSubmit(data) {
-        console.log(data)
+    const { register, handleSubmit, watch, formState: { errors } } = useForm({
+        resolver: yupResolver(RegisterSchema)
+    });
+
+    async function onSubmit(data) {
+        await SubmitAction(data)
+    }
+
+
+    function togglePasswordType(password) {
+        setPasswordVisible(!passwordVisible)
     }
     return (
         <>
@@ -30,7 +44,7 @@ function Register() {
 
                         <div className="mt-10">
                             <div>
-                                <form action="#" method="POST" className="space-y-6">
+                                <form onSubmit={handleSubmit(onSubmit)} action="#" method="POST" className="space-y-6">
                                     <div className="flex justify-between">
                                         <div>
                                             <label htmlFor="firstName" className="block text-sm font-medium leading-6 text-gray-900">
@@ -41,11 +55,12 @@ function Register() {
                                                     id="firstName"
                                                     {...register("firstName")}
                                                     type="text"
-                                                    autoComplete="text"
+                                                    placeholder="Sarad"
 
-                                                    className="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                                    className="block w-full rounded-md border-0 py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                                 />
                                             </div>
+                                            {errors.firstName && <span className="text-red-500 text-sm">{errors.firstName.message}</span>}
                                         </div>
                                         <div>
                                             <label htmlFor="lastName" className="block text-sm font-medium leading-6 text-gray-900">
@@ -56,11 +71,12 @@ function Register() {
                                                     id="lastName"
                                                     {...register("lastName")}
                                                     type="text"
-                                                    autoComplete="text"
+                                                    placeholder="Poudel"
 
-                                                    className="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                                    className="block w-full rounded-md border-0 py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                                 />
                                             </div>
+                                            {errors.lastName && <span className="text-red-500 text-sm">{errors.lastName.message}</span>}
                                         </div>
                                     </div>
                                     <div>
@@ -72,10 +88,11 @@ function Register() {
                                                 id="email"
                                                 {...register("email")}
                                                 type="email"
-                                                autoComplete="email"
-                                                className="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                                placeholder="yourname@mail.com"
+                                                className="block w-full rounded-md border-0 py-1.5  px-2 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                             />
                                         </div>
+                                        {errors.email && <span className="text-red-500 text-sm">{errors.email.message}</span>}
                                     </div>
 
                                     <div>
@@ -87,42 +104,48 @@ function Register() {
                                                 id="tel"
                                                 {...register("tel")}
                                                 type="tel"
-                                                autoComplete="tel"
-                                                className="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                                placeholder="1234567890"
+                                                className="block w-full rounded-md border-0 py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                             />
                                         </div>
+                                        {errors.tel && <span className="text-red-500 text-sm">{errors.tel.message}</span>}
                                     </div>
 
                                     <div>
                                         <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
                                             Password
                                         </label>
-                                        <div className="mt-2">
+                                        <div className="mt-2 flex">
                                             <input
                                                 id="password"
                                                 {...register("password")}
-                                                type="password"
-                                                autoComplete="current-password"
+                                                type={passwordVisible ? "text" : "password"}
 
-                                                className="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+
+                                                className="block w-full rounded-md border-0 py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                             />
+                                            <button type="button" onClick={togglePasswordType} className="ml-2 rounded-md border-0 py-1.5 px-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6">
+                                                👁️
+                                            </button>
                                         </div>
+                                        {errors.password && <span className="text-red-500 text-sm">{errors.password.message}</span>}
                                     </div>
 
                                     <div>
-                                        <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
+                                        <label htmlFor="verifyPassword" className="block text-sm font-medium leading-6 text-gray-900">
                                             Verify Password
                                         </label>
                                         <div className="mt-2">
                                             <input
-                                                id="password"
-                                                {...register("password")}
-                                                type="password"
-                                                autoComplete="current-password"
+                                                id="verifyPassword"
+                                                {...register("verifyPassword")}
+                                                type="VerifyPassword"
 
-                                                className="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+
+                                                className="block w-full rounded-md border-0 py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                             />
                                         </div>
+                                        {errors.verifyPassword && <span className="text-red-500 text-sm">{errors.verifyPassword.message}</span>}
                                     </div>
 
 
@@ -132,7 +155,7 @@ function Register() {
                                             type="submit"
                                             className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                                         >
-                                            Sign in
+                                            Register
                                         </button>
                                     </div>
                                 </form>
