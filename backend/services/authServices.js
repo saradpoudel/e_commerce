@@ -8,4 +8,8 @@ async function register(data) {
     });
 }
 
-module.exports = { register }
+async function login() {
+    const users = await prisma.client.findMany();
+    return users;
+}
+module.exports = { register, login }

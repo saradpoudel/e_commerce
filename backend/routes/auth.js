@@ -8,5 +8,8 @@ router.post('/register', async function (req, res, next) {
     res.json({ message: 'Register endpoint' });
 });
 
-
+router.get('/register', async function (req, res, next) {
+    const users = await authServices.login();
+    res.json(users);
+});
 module.exports = router;
