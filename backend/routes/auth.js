@@ -7,9 +7,20 @@ router.post('/register', async function (req, res, next) {
     await authServices.register(userData);
     res.json({ message: 'Register endpoint' });
 });
-
-router.get('/register', async function (req, res, next) {
-    const users = await authServices.login();
-    res.json(users);
+router.post('/login', async function (req, res, next) {
+    const userData = req.body;
+    await authServices.login(userData);
+    res.json({ message: 'Login successful', user })
 });
-module.exports = router;
+router.get('/user-details', async function (req, res, next) {
+    const users = await authServices.getUsers();
+    res.json(users);
+})
+router.post('/contact', async function (req, res, next) {
+    const contactData = req.body;
+    await authServices.contact(contactData);
+    res.json({ message: 'Contact endpoint' });
+})
+
+
+module.exports = router

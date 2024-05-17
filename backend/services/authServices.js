@@ -8,8 +8,29 @@ async function register(data) {
     });
 }
 
-async function login() {
-    const users = await prisma.client.findMany();
-    return users;
+async function login(data) {
+    const { email, password } = data;
+    const user = await prisma.client.findFirst({
+        where: { email }
+    });
+    if (!user) {
+        throw new Error('User not found');
+    }
+
+    // Compare the provided password with the hashed password in the database
+    if (password !== user.password) {
+        throw new Error('Incorrect password');
+    }
+
+    return user;
 }
-module.exports = { register, login }
+
+async function getUsers() {
+    return await prisma.client.findMany();
+}
+async function contact(data) {
+    await prisma.contact.create({
+        data
+    });
+}
+module.exports = { register, login, getUsers, contact }
