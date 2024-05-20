@@ -6,7 +6,7 @@ function ContactForm() {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
-    const url = `${API_URL}api/contact`;
+    const url = `${API_URL}api/auth/contact`;
 
     async function handleSubmit(e) {
         e.preventDefault();
