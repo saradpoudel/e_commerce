@@ -10,6 +10,7 @@ import SubmitAction from "../actions/SubmitAction.js"
 
 
 function Register() {
+    const [backendErrors, setBackendErrors] = useState();
     const [passwordVisible, setPasswordVisible] = useState(false);
 
     const { register, handleSubmit, watch, formState: { errors } } = useForm({
@@ -17,7 +18,16 @@ function Register() {
     });
 
     async function onSubmit(data) {
-        await SubmitAction(data)
+
+        const response = await SubmitAction(data);
+        const { success, error } = await response.json();
+        if (error) {
+            setBackendErrors(error.messages.join(", "))
+            console.log(error.message)
+        }
+        else if (success) {
+            setBackendErrors(success.message)
+        }
     }
 
 
@@ -41,7 +51,7 @@ function Register() {
                                 </Link>
                             </p>
                         </div>
-
+                        {backendErrors && <span className="text-red-500 text-sm">{backendErrors}</span>}
                         <div className="mt-10">
                             <div>
                                 <form onSubmit={handleSubmit(onSubmit)} action="#" method="POST" className="space-y-6">

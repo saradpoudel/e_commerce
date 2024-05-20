@@ -22,6 +22,9 @@ model client {
   email     String   @db.VarChar(255)
   tel       String   @db.VarChar(255)
   password  String   @db.VarChar(255)
+
+  @@unique([email])
+  @@unique([tel])
 }
 
 model contact {
