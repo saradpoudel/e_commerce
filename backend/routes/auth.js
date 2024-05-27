@@ -1,6 +1,7 @@
 var express = require('express');
 var authServices = require('../services/authServices');
 var router = express.Router();
+var emailService = require('../services/emailService');
 
 router.post('/register', async function (req, res, next) {
     try {
@@ -22,7 +23,8 @@ router.post('/register', async function (req, res, next) {
         if (messages.length > 0) {
             return res.status(400).json({ error: { messages: messages } });
         }
-        await authServices.register(userData);
+        const newClient = await authServices.register(userData);
+        await emailService.sendRegisterEmail(newClient);
         res.json({ success: { message: 'Registration successful' } });
     } catch (error) {
         console.log(error)

@@ -6,7 +6,7 @@ async function register(data) {
     delete data.verifyPassword;
     data.password = await bcrypt.hash(data.password, 10)
     try {
-        await prisma.client.create({
+        return await prisma.client.create({
             data
         });
     }
